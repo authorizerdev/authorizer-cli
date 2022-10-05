@@ -1,5 +1,6 @@
 use std::path::PathBuf;
 use clap::{Parser, Subcommand};
+use reqwest::Client;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -15,6 +16,29 @@ struct Cli {
     command: Option<Commands>,
 }
 
+type Error = Box<dyn std::error::Error>;
+type Result<T, E = Error> = std::result::Result<T, E>;
+
+async fn send_invitation() -> Result<()> {
+    let client = Client::new();
+    let req = client
+        // or use .post, etc.
+        .get("https://webhook.site/1dff66fd-07ff-4cb5-9a77-681efe863747")
+        .header("Accepts", "application/json")
+        .query(&[("hello", "1"), ("world", "ABCD")]);
+
+    let res = req.send().await?;
+    println!("{}", res.status());
+
+    let body = res.bytes().await?;
+
+    let v = body.to_vec();
+    let s = String::from_utf8_lossy(&v);
+    println!("response: {} ", s);
+
+    Ok(())
+}
+
 #[derive(Subcommand)]
 enum Commands {
     /// Invite users to app
@@ -25,7 +49,9 @@ enum Commands {
     },
 }
 
-fn main() {
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+
     let cli = Cli::parse();
 
     // You can check the value provided by positional arguments, or option arguments
@@ -48,9 +74,9 @@ fn main() {
             for line in content.lines() {
                 println!("{}", line);
             };
+            send_invitation().await?;
         }
         None => {}
     }
-
-    // Continued program logic goes here...
+    Ok(())
 }
