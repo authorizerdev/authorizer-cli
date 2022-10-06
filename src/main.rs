@@ -52,7 +52,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         0 => (),
         _ => {
             is_debug_mode_on = true;
-            println!("Debug mode is on");
+            println!("Debug mode is ON");
         },
     }
 
