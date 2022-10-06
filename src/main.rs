@@ -1,6 +1,7 @@
-use std::path::PathBuf;
+use std::{path::PathBuf};
 use clap::{Parser, Subcommand};
 use reqwest::Client;
+use serde_json::{Value, Map};
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -20,15 +21,25 @@ type Error = Box<dyn std::error::Error>;
 type Result<T, E = Error> = std::result::Result<T, E>;
 
 async fn send_invitation() -> Result<()> {
+    const SEND_INVITAION_MUTATION: &str = "mutation inviteMembers($params: InviteMemberInput!) {\n  _invite_members(params: $params) {\n    message\n    __typename\n  }\n}";
     let client = Client::new();
+    let mut emails_map = Map::new();
+    emails_map.insert("emails".to_string(), Value::Array(vec![
+        Value::String("anik800@authorizer.dev".to_string()),
+        Value::String("anik900@authorizer.dev".to_string()),
+    ]));
+    let mut params_map = Map::new();
+    params_map.insert("params".to_string(), Value::Object(emails_map));
+    let mut map = Map::new();
+    map.insert("query".to_string(), Value::String(SEND_INVITAION_MUTATION.to_string()));
+    map.insert("variables".to_string(), Value::Object(params_map));
     let req = client
-        // or use .post, etc.
-        .get("https://webhook.site/1dff66fd-07ff-4cb5-9a77-681efe863747")
-        .header("Accepts", "application/json")
-        .query(&[("hello", "1"), ("world", "ABCD")]);
+        .post("http://localhost:8080/graphql")
+        .header("x-authorizer-admin-secret", "admin")
+        .json(&map);
 
     let res = req.send().await?;
-    println!("{}", res.status());
+    println!("request status: {}", res.status());
 
     let body = res.bytes().await?;
 
