@@ -23,14 +23,14 @@ type Result<T, E = Error> = std::result::Result<T, E>;
 async fn send_invitation() -> Result<()> {
     const SEND_INVITAION_MUTATION: &str = "mutation inviteMembers($params: InviteMemberInput!) {\n  _invite_members(params: $params) {\n    message\n    __typename\n  }\n}";
     let client = Client::new();
+    let mut map = Map::new();
+    let mut params_map = Map::new();
     let mut emails_map = Map::new();
     emails_map.insert("emails".to_string(), Value::Array(vec![
         Value::String("anik800@authorizer.dev".to_string()),
         Value::String("anik900@authorizer.dev".to_string()),
     ]));
-    let mut params_map = Map::new();
     params_map.insert("params".to_string(), Value::Object(emails_map));
-    let mut map = Map::new();
     map.insert("query".to_string(), Value::String(SEND_INVITAION_MUTATION.to_string()));
     map.insert("variables".to_string(), Value::Object(params_map));
     let req = client
