@@ -20,16 +20,13 @@ struct Cli {
 type Error = Box<dyn std::error::Error>;
 type Result<T, E = Error> = std::result::Result<T, E>;
 
-async fn send_invitation() -> Result<()> {
+async fn send_invitation(user_emails: Vec<Value> ) -> Result<()> {
     const SEND_INVITAION_MUTATION: &str = "mutation inviteMembers($params: InviteMemberInput!) {\n  _invite_members(params: $params) {\n    message\n    __typename\n  }\n}";
     let client = Client::new();
     let mut map = Map::new();
     let mut params_map = Map::new();
     let mut emails_map = Map::new();
-    emails_map.insert("emails".to_string(), Value::Array(vec![
-        Value::String("anik800@authorizer.dev".to_string()),
-        Value::String("anik900@authorizer.dev".to_string()),
-    ]));
+    emails_map.insert("emails".to_string(), Value::Array(user_emails));
     params_map.insert("params".to_string(), Value::Object(emails_map));
     map.insert("query".to_string(), Value::String(SEND_INVITAION_MUTATION.to_string()));
     map.insert("variables".to_string(), Value::Object(params_map));
@@ -81,11 +78,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // matches just as you would the top level cmd
     match &cli.command {
         Some(Commands::InviteMembers { path }) => {
+            let mut user_emails = vec![];
             let content = std::fs::read_to_string(&path).expect(&format!("could not read file `{}`", &path.display()));
-            for line in content.lines() {
-                println!("{}", line);
+            for email in content.lines() {
+                user_emails.push(Value::String(email.to_string()));
             };
-            send_invitation().await?;
+            send_invitation(user_emails).await?;
         }
         None => {}
     }
