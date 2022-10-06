@@ -33,8 +33,11 @@ enum Commands {
     },
 }
 
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    
+    let mut is_debug_mode_on = false;
 
     let cli = Cli::parse();
 
@@ -47,7 +50,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Note, only flags can have multiple occurrences
     match cli.debug {
         0 => (),
-        _ => println!("Debug mode is on"),
+        _ => {
+            is_debug_mode_on = true;
+            println!("Debug mode is on");
+        },
     }
 
     // You can check for the existence of subcommands, and if found use their
@@ -59,7 +65,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             for email in content.lines() {
                 user_emails.push(Value::String(email.to_string()));
             };
-            send_invitation(user_emails).await?;
+            send_invitation(user_emails, is_debug_mode_on).await?;
         }
         None => {}
     }
