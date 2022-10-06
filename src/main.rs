@@ -1,7 +1,11 @@
+mod utils;
+
 use std::{path::PathBuf};
 use clap::{Parser, Subcommand};
 use reqwest::Client;
 use serde_json::{Value, Map};
+
+use crate::utils::get_valid_emails;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -26,7 +30,11 @@ async fn send_invitation(user_emails: Vec<Value> ) -> Result<()> {
     let mut map = Map::new();
     let mut params_map = Map::new();
     let mut emails_map = Map::new();
-    emails_map.insert("emails".to_string(), Value::Array(user_emails));
+    let valid_emails = get_valid_emails(user_emails);
+    if valid_emails.len() == 0 {
+        Err("Invalid list uploaded!!")?;
+    }
+    emails_map.insert("emails".to_string(), Value::Array(valid_emails));
     params_map.insert("params".to_string(), Value::Object(emails_map));
     map.insert("query".to_string(), Value::String(SEND_INVITAION_MUTATION.to_string()));
     map.insert("variables".to_string(), Value::Object(params_map));
