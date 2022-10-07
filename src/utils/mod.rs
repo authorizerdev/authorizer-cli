@@ -1,6 +1,6 @@
 use regex::Regex;
 use serde_json::Value;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::ffi::OsStr;
 
 pub fn get_valid_emails(user_emails: Vec<Value>) -> Vec<Value> {
@@ -23,4 +23,8 @@ pub fn get_extension_from_filename(filename: &str) -> Option<&str> {
     Path::new(filename)
         .extension()
         .and_then(OsStr::to_str)
+}
+
+pub fn validate_path(path: &PathBuf) -> bool {
+    return Path::new(path).exists();
 }

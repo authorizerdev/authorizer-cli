@@ -7,7 +7,7 @@ use clap::{Parser, Subcommand};
 use prompt::take_user_input;
 use serde_json::Value;
 use graphql::send_invitation;
-use utils::get_extension_from_filename;
+use utils::{get_extension_from_filename, validate_path};
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -68,6 +68,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let file_extension = get_extension_from_filename(path_str);
             match file_extension {
                 Some(ext) => {
+                    if !validate_path(path) {
+                        Err("Invalid path!")?;
+                    }
                     match ext {
                         "csv" => {
                             println!("csv format ==>> {}", ext);
