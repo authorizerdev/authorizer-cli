@@ -69,7 +69,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 user_emails.push(Value::String(email.to_string()));
             };
             let user_inputs = take_user_input();
-            send_invitation(&user_inputs[0], &user_inputs[1], user_emails, is_debug_mode_on).await?;
+            match user_inputs {
+                Ok(data) => {
+                    send_invitation(&data[0], &data[1], user_emails, is_debug_mode_on).await?;
+                },
+                Err(error) => {
+                    Err(error.to_string())?;
+                },
+            }
         }
         None => {}
     }

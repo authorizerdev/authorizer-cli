@@ -2,8 +2,11 @@ extern crate rpassword;
     
 use rpassword::read_password;
 use std::io::{Write, self};
+
+type Error = Box<dyn std::error::Error>;
+type Result<T, E = Error> = std::result::Result<T, E>;
     
-pub fn take_user_input() -> [String; 2] {
+pub fn take_user_input() -> Result<([String; 2])> {
 
     print!("Enter authorizer url: ");
     io::stdout().flush().unwrap();
@@ -12,6 +15,10 @@ pub fn take_user_input() -> [String; 2] {
     io::stdin().read_line(&mut authorizer_url).unwrap();
 
     let mut url = authorizer_url.trim().to_owned();
+
+    if url.is_empty() {
+        Err("Invalid URL!")?;
+    }
 
     if url.to_string().chars().last().unwrap() == '/' {
         url.push_str("graphql")
@@ -25,5 +32,9 @@ pub fn take_user_input() -> [String; 2] {
     let admin_secret = read_password().unwrap();
     let secret = admin_secret.trim();
 
-    return [url.to_string(), secret.to_string()];
+    if secret.is_empty() {
+        Err("Invalid admin secret!")?;
+    }
+
+    Ok([url, secret.to_string()])
 }
