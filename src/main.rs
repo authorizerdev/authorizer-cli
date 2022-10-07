@@ -11,8 +11,9 @@ use graphql::send_invitation;
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
 struct Cli {
-    /// Authorizer url to operate on
-    url: Option<String>,
+    // used to pass url as argument
+    // /// Authorizer url to operate on
+    // url: Option<String>,
 
     /// Turn debugging information on
     #[arg(short, long, action = clap::ArgAction::Count)]
