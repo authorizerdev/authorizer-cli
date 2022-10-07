@@ -1,8 +1,10 @@
 mod utils;
 mod graphql;
+mod prompt;
 
 use std::path::PathBuf;
 use clap::{Parser, Subcommand};
+use prompt::take_user_input;
 use serde_json::Value;
 use graphql::send_invitation;
 
@@ -67,6 +69,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             for email in content.lines() {
                 user_emails.push(Value::String(email.to_string()));
             };
+            take_user_input();
             send_invitation(authorizer_url, admin_secret, user_emails, is_debug_mode_on).await?;
         }
         None => {}
