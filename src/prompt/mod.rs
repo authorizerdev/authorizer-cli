@@ -3,6 +3,8 @@ extern crate rpassword;
 use rpassword::read_password;
 use std::io::{Write, self};
 
+use crate::utils::validate_url;
+
 type Error = Box<dyn std::error::Error>;
 type Result<T, E = Error> = std::result::Result<T, E>;
     
@@ -16,7 +18,7 @@ pub fn take_user_input() -> Result<([String; 2])> {
 
     let mut url = authorizer_url.trim().to_owned();
 
-    if url.is_empty() {
+    if url.is_empty() || !validate_url(&url) {
         Err("Invalid URL!")?;
     }
 

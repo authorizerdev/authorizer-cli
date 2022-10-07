@@ -11,3 +11,8 @@ pub fn get_valid_emails(user_emails: Vec<Value>) -> Vec<Value> {
     };
     return valid_emails;
 }
+
+pub fn validate_url(url: &str) -> bool {
+    let url_regex = Regex::new(r"(?:^|s)((https?://)?(?:localhost|[w-]+(?:.[w-]+)+)(:d+)?(/S*)?)").unwrap();
+    return url_regex.is_match(&url.to_string());
+}
