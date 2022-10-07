@@ -2,7 +2,7 @@ mod utils;
 mod graphql;
 mod prompt;
 
-use std::path::PathBuf;
+use std::{path::PathBuf, io::copy, fs::File};
 use clap::{Parser, Subcommand};
 use prompt::take_user_input;
 use serde_json::Value;
@@ -31,6 +31,12 @@ type Result<T, E = Error> = std::result::Result<T, E>;
 enum Commands {
     /// Invite users to app [--file-path <PATH>]
     InviteMembers {
+        /// Sets path for input file
+        #[arg(short, long, value_name = "FILE", alias = "file-path")]
+        path: PathBuf,
+    },
+    /// Download samples [--file-path <PATH>]
+    DownloadSamples {
         /// Sets path for input file
         #[arg(short, long, value_name = "FILE", alias = "file-path")]
         path: PathBuf,
@@ -104,6 +110,26 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     Err(error.to_string())?;
                 },
             }
+        }
+        Some(Commands::DownloadSamples { path }) => {
+            let mut csv_target_path = path.to_owned();
+            let mut txt_target_path = path.to_owned();
+            csv_target_path.push("authorizer_sample.csv");
+            txt_target_path.push("authorizer_sample.txt");
+
+            let csv_sample_response = reqwest::get("https://gist.githubusercontent.com/anik-ghosh-au7/a0ec5bc432594438adc3e6f6fb42e520/raw/authorizer_invite_members_sample.csv").await?;
+            let txt_sample_response = reqwest::get("https://gist.githubusercontent.com/anik-ghosh-au7/8a518f9ed11f2475087c5e0b22e67f80/raw/authorizer_invite_members_sample.txt").await?;
+
+            let mut csv_output = File::create(csv_target_path)?;
+            let mut txt_output = File::create(txt_target_path)?;
+
+            let csv_sample_content =  csv_sample_response.text().await?;
+            let txt_sample_content =  txt_sample_response.text().await?;
+
+            copy(&mut csv_sample_content.as_bytes(), &mut csv_output)?;
+            copy(&mut txt_sample_content.as_bytes(), &mut txt_output)?;
+
+            println!("Success: sample files download complete",);
         }
         None => {}
     }
