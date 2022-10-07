@@ -49,8 +49,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     //     authorizer_url = url;
     // }
 
-    // You can see how many times a particular flag or argument occurred
-    // Note, only flags can have multiple occurrences
+    // check if debug flag was set
     match cli.debug {
         0 => (),
         _ => {
@@ -59,8 +58,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         },
     }
 
-    // You can check for the existence of subcommands, and if found use their
-    // matches just as you would the top level cmd
+    // execute commands
     match &cli.command {
         Some(Commands::InviteMembers { path }) => {
             let mut user_emails = vec![];
@@ -73,10 +71,17 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     }
                     match ext {
                         "csv" => {
-                            println!("csv format ==>> {}", ext);
+                            let mut reader = csv::ReaderBuilder::new()
+                            .has_headers(false)
+                            .from_path(&path_str)?;
+                            for record in reader.records() {
+                                for email in record?.into_iter() {
+                                    user_emails.push(Value::String(email.to_string()));
+                                }
+                            }
                         },
                         "txt" => {
-                            let content = std::fs::read_to_string(&path)?;
+                            let content = std::fs::read_to_string(&path_str)?;
                             for email in content.lines() {
                                 user_emails.push(Value::String(email.to_string()));
                             };
