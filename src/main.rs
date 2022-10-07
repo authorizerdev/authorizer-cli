@@ -7,6 +7,7 @@ use clap::{Parser, Subcommand};
 use prompt::take_user_input;
 use serde_json::Value;
 use graphql::send_invitation;
+use utils::get_extension_from_filename;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -36,7 +37,6 @@ enum Commands {
     },
 }
 
-
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     
@@ -64,10 +64,29 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     match &cli.command {
         Some(Commands::InviteMembers { path }) => {
             let mut user_emails = vec![];
-            let content = std::fs::read_to_string(&path).expect(&format!("could not read file `{}`", &path.display()));
-            for email in content.lines() {
-                user_emails.push(Value::String(email.to_string()));
-            };
+            let path_str = &path.as_path().display().to_string();
+            let file_extension = get_extension_from_filename(path_str);
+            match file_extension {
+                Some(ext) => {
+                    match ext {
+                        "csv" => {
+                            println!("csv format ==>> {}", ext);
+                        },
+                        "txt" => {
+                            let content = std::fs::read_to_string(&path).expect(&format!("could not read file `{}`", &path.display()));
+                            for email in content.lines() {
+                                user_emails.push(Value::String(email.to_string()));
+                            };
+                        },
+                        _ => {
+                            Err("Unsupported file format!")?;
+                        },
+                    }
+                },
+                None => {
+                    Err("Invalid file!")?;
+                },
+            }
             let user_inputs = take_user_input();
             match user_inputs {
                 Ok(data) => {

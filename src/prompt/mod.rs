@@ -28,7 +28,7 @@ pub fn take_user_input() -> Result<([String; 2])> {
         url.push_str("/graphql")
     }
 
-    print!("Enter your admin secret: ");
+    print!("Enter admin secret: ");
     std::io::stdout().flush().unwrap();
     
     let admin_secret = read_password().unwrap();
