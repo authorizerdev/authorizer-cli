@@ -76,7 +76,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                             println!("csv format ==>> {}", ext);
                         },
                         "txt" => {
-                            let content = std::fs::read_to_string(&path).expect(&format!("could not read file `{}`", &path.display()));
+                            let content = std::fs::read_to_string(&path)?;
                             for email in content.lines() {
                                 user_emails.push(Value::String(email.to_string()));
                             };
