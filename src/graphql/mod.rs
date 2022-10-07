@@ -12,7 +12,7 @@ fn convert<'a>(s: &'a Cow<'_, str>) -> &'a str {
     s.as_ref()
 }
 
-pub async fn send_invitation(user_emails: Vec<Value>, is_debug_mode_on: bool) -> Result<()> {
+pub async fn send_invitation(url: &str, secret: &str, user_emails: Vec<Value>, is_debug_mode_on: bool) -> Result<()> {
     if is_debug_mode_on {
         println!("input user emails: {:?}", user_emails);
     }
@@ -33,8 +33,8 @@ pub async fn send_invitation(user_emails: Vec<Value>, is_debug_mode_on: bool) ->
     map.insert("query".to_string(), Value::String(SEND_INVITAION_MUTATION.to_string()));
     map.insert("variables".to_string(), Value::Object(params_map));
     let req = client
-        .post("http://localhost:8080/graphql")
-        .header("x-authorizer-admin-secret", "admin")
+        .post(url.to_owned() + "/graphql")
+        .header("x-authorizer-admin-secret", secret)
         .json(&map);
 
     let res = req.send().await?;
