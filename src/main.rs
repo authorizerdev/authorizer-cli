@@ -29,10 +29,10 @@ type Result<T, E = Error> = std::result::Result<T, E>;
 
 #[derive(Subcommand)]
 enum Commands {
-    /// Invite users to app
+    /// Invite users to app [--file-path <PATH>]
     InviteMembers {
         /// Sets path for input file
-        #[arg(short, long, value_name = "FILE")]
+        #[arg(short, long, value_name = "FILE", alias = "file-path")]
         path: PathBuf,
     },
 }
