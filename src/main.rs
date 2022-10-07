@@ -40,15 +40,13 @@ enum Commands {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     
     let mut is_debug_mode_on = false;
-    let mut authorizer_url = "http://localhost:8080";
-    let admin_secret = "admin";
 
     let cli = Cli::parse();
 
     // Set the value of authorizer url if passed as an argument
-    if let Some(url) = cli.url.as_deref() {
-        authorizer_url = url;
-    }
+    // if let Some(url) = cli.url.as_deref() {
+    //     authorizer_url = url;
+    // }
 
     // You can see how many times a particular flag or argument occurred
     // Note, only flags can have multiple occurrences
@@ -69,8 +67,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             for email in content.lines() {
                 user_emails.push(Value::String(email.to_string()));
             };
-            take_user_input();
-            send_invitation(authorizer_url, admin_secret, user_emails, is_debug_mode_on).await?;
+            let user_inputs = take_user_input();
+            send_invitation(&user_inputs[0], &user_inputs[1], user_emails, is_debug_mode_on).await?;
         }
         None => {}
     }
