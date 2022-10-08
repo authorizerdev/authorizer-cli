@@ -23,7 +23,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "authorizer-cli-test"
+name = "authorizer-cli"
 version = "0.1.0"
 dependencies = [
  "clap",
