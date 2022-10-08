@@ -6,8 +6,8 @@ authors = ["Anik Ghosh <tech.anikghosh@gmail.com>"]
 license = "MIT OR Apache-2.0"
 description = "CLI tool for authorizer"
 readme = "README.md"
-homepage = "https://github.com/anik-ghosh-au7/authorizer-cli"
-repository = "https://github.com/anik-ghosh-au7/authorizer-cli"
+homepage = "https://github.com/authorizerdev/authorizer-cli"
+repository = "https://github.com/authorizerdev/authorizer-cli"
 keywords = ["cli", "tool", "authorizer"]
 categories = ["command-line-utilities"]
 
