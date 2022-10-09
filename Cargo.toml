@@ -2,7 +2,7 @@
 name = "authorizer-cli"
 version = "0.1.0"
 edition = "2021"
-authors = ["Anik Ghosh <tech.anikghosh@gmail.com>"]
+authors = ["Lakhan Samani <lakhan.m.samani@gmail.com>","Anik Ghosh <tech.anikghosh@gmail.com>"]
 license = "MIT OR Apache-2.0"
 description = "CLI tool for authorizer"
 readme = "README.md"
