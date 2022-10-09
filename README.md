@@ -43,7 +43,7 @@ Output:
 ```sh
 CLI tool for authorizer
 
-Usage: authorizer-cli-test [OPTIONS] [COMMAND]
+Usage: authorizer-cli [OPTIONS] [COMMAND]
 
 Commands:
   invite-members    Invite users to app [--file-path <PATH>]
