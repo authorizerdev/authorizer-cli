@@ -2,7 +2,7 @@
 
 CLI tool for [authorizer.dev](https://authorizer.dev), use this to perform various operations on your authorizer instance.
 
-For detailed information about all the supporetd operations check [docs](https://docs.authorizer.dev/)
+For detailed information about all the supported operations check [docs](https://docs.authorizer.dev/)
 
 ## Getting Started
 
