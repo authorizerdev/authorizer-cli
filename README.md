@@ -33,9 +33,9 @@ Follow these steps to quickly get started with the "authorizer-cli" tool.
 
 Use Rust's package manager, `cargo`, to install the *"authorizer-cli"* binary on your system. Ensure you have Rust and `cargo` installed.
 
-sh
+```sh
 cargo install authorizer-cli
-
+```
 
 This will download and install the *"authorizer-cli"* tool.
 
@@ -53,9 +53,9 @@ Invite users to your app by uploading a CSV or TXT file containing member inform
 
 #### Command :
 
-sh
+```sh
 authorizer-cli invite-members --file-path ./authorizer_sample.csv
-
+```
 
 #### Usage:
 
@@ -68,9 +68,9 @@ Download sample files to your specified directory for various use cases. These f
 
 #### Command:
 
-sh
+```sh
 authorizer-cli download-samples --file-path .
-
+```
 
 #### Usage:
 
@@ -82,9 +82,9 @@ Enable debug mode to get more detailed information about what the tool is doing 
 
 #### Example with Debug Mode:
 
-sh
+```sh
 authorizer-cli invite-members --file-path ./authorizer_sample.csv -d
-
+```
 
 #### Usage:
 
@@ -96,9 +96,9 @@ For a full list of available commands and their respective options, you can use 
 
 #### Command:
 
-sh
+```sh
 authorizer-cli --help
-
+```
 
 #### Usage:
 
@@ -110,21 +110,21 @@ If you'd like to contribute to the development of the "authorizer-cli" tool, fol
 
 1. Clone this repository.
 
-sh 
+```sh 
 git clone <repository_url>
-
+```
 
 2. For development use, build the tool with the following command:
 
-sh
+```sh
 cargo build
-
+```
 
 3. For production use, build the tool in release mode:
 
-sh
+```sh
 cargo build --release
-
+```
 
 ## Support Our Work
 
